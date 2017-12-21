@@ -32,6 +32,9 @@ void HTTPClient::requestProxy(const QString& url, QHttpMultiPart* multiPart)
     this->url = url;
     requestInProgress = true;
     timer->start();
+
+    QNetworkRequest request = QNetworkRequest(QUrl(url));
+    QNetworkReply* httpReply= networkManager->post(request, multiPart);
 }
 
 void HTTPClient::onSslError(QNetworkReply* reply,const QList<QSslError>& errors)

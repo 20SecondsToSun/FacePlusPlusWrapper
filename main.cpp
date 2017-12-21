@@ -3,8 +3,8 @@
 #include <QQmlEngine>
 #include <QQmlContext>
 #include "config/Config.h"
-#include "controller.h"
 #include "datamanager/DataManager.h"
+#include "face++/face/FaceController.h"
 
 int main(int argc, char *argv[])
 {
@@ -21,10 +21,10 @@ int main(int argc, char *argv[])
 
     QScopedPointer<DataManager> dataManager(new DataManager);
 
-    QScopedPointer<Controller> controller(new Controller);
-    controller->init(config.data());
+    QScopedPointer<Controller> facecontroller(new FaceController);
+    facecontroller->init();
 
-    engine.rootContext()->setContextProperty("controller", controller.data());
+    engine.rootContext()->setContextProperty("facecontroller", facecontroller.data());
     engine.rootContext()->setContextProperty("dataManager", dataManager.data());
 
 

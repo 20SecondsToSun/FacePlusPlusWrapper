@@ -8,9 +8,10 @@ SOURCES += main.cpp \
     face++/face/FaceDetectionHTTPClient.cpp \
     face++/face/FaceDetectionParser.cpp \
     face++/face/FaceHolder.cpp \
-    controller.cpp \
-    face++/test.cpp \
-    datamanager/DataManager.cpp
+    datamanager/DataManager.cpp \
+    face++/Controller.cpp \
+    face++/face/FaceController.cpp \
+    face++/FacePlusPlusConfig.cpp
 
 RESOURCES += qml.qrc
 
@@ -43,6 +44,7 @@ HEADERS += \
     face++/face/FaceDetectionParser.h \
     face++/face/FaceHolder.h \
     face++/face/facetypes.h \
-    controller.h \
-    face++/test.h \
-    datamanager/DataManager.h
+    datamanager/DataManager.h \
+    face++/Controller.h \
+    face++/face/FaceController.h \
+    face++/FacePlusPlusConfig.h

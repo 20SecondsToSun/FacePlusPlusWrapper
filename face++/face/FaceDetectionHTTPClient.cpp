@@ -35,8 +35,13 @@ void FaceDetectionHTTPClient::sendPhoto(const QString& photoURL)
     imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/jpeg"));
     imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"image_file\"; filename=\"face1.jpeg\""));
 
-    QFile* file = new QFile(photoURL);
+    QFile* file = new QFile("c:/projects/Qt/_FaceRecognitionRelease/testData/test1/test_18.jpg");
     file->open(QIODevice::ReadOnly);
+    if(!file->isOpen())
+    {
+        qDebug()<<"no file found";
+        return;
+    }
     imagePart.setBodyDevice(file);
     file->setParent(multiPart);
 
@@ -66,20 +71,24 @@ void FaceDetectionHTTPClient::sendPhoto(const QString& photoURL)
 void FaceDetectionHTTPClient::httpRequestSuccessHandler(QNetworkReply* reply)
 {
     HTTPClient::httpRequestSuccessHandler(reply);
+
     auto data  = reply->readAll();
 
     QJsonDocument jsonResponse = QJsonDocument::fromJson(data);
     QJsonObject jsonObject = jsonResponse.object();
 
+    qDebug()<<"jsonObject"<<data;
     FaceDetectionParcer parser;
     parser.parse(jsonObject);
 
     if(parser.noFaces())
     {
+        qDebug()<<"no faces";
         emit faceNotFoundSignal();
     }
     else
     {
+        qDebug()<<"find faces count: "<< parser.getFaces().size();
         emit faceRecognizedSignal(parser.getFaces());
     }
 }

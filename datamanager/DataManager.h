@@ -10,12 +10,6 @@ class DataManager : public QObject
 public:
     explicit DataManager(QObject *parent = nullptr);
 
-     Q_INVOKABLE void open();
-
-private:
-    void initializeImageFileDialog(QFileDialog &dialog, QFileDialog::AcceptMode acceptMode);
-    bool loadFile(const QString &fileName);
-
 signals:
 
 public slots:
