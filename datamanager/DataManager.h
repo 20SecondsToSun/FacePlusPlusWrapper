@@ -2,7 +2,6 @@
 #define DATAMANAGER_H
 
 #include <QObject>
-#include <QFileDialog>
 
 class DataManager : public QObject
 {

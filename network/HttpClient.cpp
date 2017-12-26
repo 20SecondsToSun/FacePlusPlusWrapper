@@ -30,7 +30,6 @@ void HTTPClient::makeRequest(const QString& url, QHttpMultiPart* multiPart)
 void HTTPClient::requestProxy(const QString& url, QHttpMultiPart* multiPart)
 {
     qDebug() << "requestProxy " << url;
-    qDebug()<<" multiPart  "<< multiPart;
     this->url = url;
     requestInProgress = true;
     timer->start();
