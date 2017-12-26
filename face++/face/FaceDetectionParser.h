@@ -14,9 +14,9 @@ public:
     FaceDetectionParcer();
 
     void parse(const QJsonObject& faces);
+
     QVector<Face> getFaces() const;
     bool noFaces() const;
-
 };
 
 #endif // FACEDETECTIONPARCER_H

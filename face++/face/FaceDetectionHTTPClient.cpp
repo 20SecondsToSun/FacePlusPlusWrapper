@@ -1,5 +1,5 @@
 #include "FaceDetectionHTTPClient.h"
-#include "FaceDetectionParser.h"
+
 #include <QFile>
 #include <QHttpMultiPart>
 #include <QJsonDocument>
@@ -24,27 +24,30 @@ void FaceDetectionHTTPClient::initService(const QString& settingsFile)
     FACE_SERVER_TIMEOUT = settings.value("FACE_SERVER_TIMEOUT").toInt();
     settings.endGroup();
 
-    setTimeout(FACE_SERVER_TIMEOUT);
-    setRequestAttempts(2);
+    HTTPClient::setTimeout(FACE_SERVER_TIMEOUT);
+    HTTPClient::setRequestAttempts(2);
 }
 
 void FaceDetectionHTTPClient::sendPhoto(const QString& photoURL)
 {
-    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
-    QHttpPart imagePart;
-    imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/jpeg"));
-    imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"image_file\"; filename=\"face1.jpeg\""));
+    QString cleanUrl = photoURL;
+    cleanUrl = cleanUrl.remove(0, 8);
 
-    QFile* file = new QFile("c:/projects/Qt/_FaceRecognitionRelease/testData/test1/test_18.jpg");
+    QFile* file = new QFile(cleanUrl);
     file->open(QIODevice::ReadOnly);
+
     if(!file->isOpen())
     {
         qDebug()<<"no file found";
         return;
     }
+
+    QHttpMultiPart* multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+    QHttpPart imagePart;
+    imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/jpeg"));
+    imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"image_file\"; filename=\"face1.jpeg\""));
     imagePart.setBodyDevice(file);
     file->setParent(multiPart);
-
     multiPart->append(imagePart);
 
     QHttpPart loginPart;
@@ -73,24 +76,9 @@ void FaceDetectionHTTPClient::httpRequestSuccessHandler(QNetworkReply* reply)
     HTTPClient::httpRequestSuccessHandler(reply);
 
     auto data  = reply->readAll();
-
     QJsonDocument jsonResponse = QJsonDocument::fromJson(data);
     QJsonObject jsonObject = jsonResponse.object();
-
-    qDebug()<<"jsonObject"<<data;
-    FaceDetectionParcer parser;
-    parser.parse(jsonObject);
-
-    if(parser.noFaces())
-    {
-        qDebug()<<"no faces";
-        emit faceNotFoundSignal();
-    }
-    else
-    {
-        qDebug()<<"find faces count: "<< parser.getFaces().size();
-        emit faceRecognizedSignal(parser.getFaces());
-    }
+    emit requestSuccessSignal(jsonObject);
 }
 
 void FaceDetectionHTTPClient::requestFailedHandler()

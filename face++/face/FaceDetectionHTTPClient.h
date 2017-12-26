@@ -20,8 +20,7 @@ public:
     void requestSuccessHandler(const QByteArray& data);
 
 signals:
-    void faceNotFoundSignal();
-    void faceRecognizedSignal(const QVector<Face>& faces);
+    void requestSuccessSignal(const QJsonObject&);
     void serviceErrorSignal();
 
 protected slots:

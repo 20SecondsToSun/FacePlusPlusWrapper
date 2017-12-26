@@ -20,22 +20,12 @@ public:
 
     Q_INVOKABLE float getBeauty();
     Q_INVOKABLE double getRoll() const;
-    Q_INVOKABLE QPoint getLeftEye() const;
-    Q_INVOKABLE QPoint getRightEye() const;
     Q_INVOKABLE QRect getFaceRect() const;
-
-    Q_INVOKABLE QVector<int> getFacePointsX() const;
-    Q_INVOKABLE QVector<int> getFacePointsY() const;
-
-    Q_INVOKABLE QVector<int> getConvexFacePointsX() const;
-    Q_INVOKABLE QVector<int> getConvexFacePointsY() const;
     Q_INVOKABLE bool ready() const;
     Q_INVOKABLE void flush();
 
 private:
     Face _face;
-    QVector<int> getPointsX(const QVector<QPoint>& points) const;
-    QVector<int> getPointsY(const QVector<QPoint>& points) const;
     bool _isReady = false;
 
 public slots:

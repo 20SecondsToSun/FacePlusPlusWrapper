@@ -6,6 +6,7 @@
 #include "face++/Controller.h"
 #include "FaceDetectionHTTPClient.h"
 #include "../FacePlusPlusConfig.h"
+#include "FaceDetectionParser.h"
 
 class FaceController : public Controller
 {
@@ -24,9 +25,8 @@ private:
 signals:
 
 public slots:
-    void faceRecognitionHandler(const QVector<Face>& faces);
     void httpErrorHandler();
-    void faceNotFoundHandler();
+    void requestSuccessHandler(const QJsonObject& jsonObject);
 
 };
 

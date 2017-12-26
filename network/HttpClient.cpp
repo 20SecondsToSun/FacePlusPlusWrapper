@@ -12,7 +12,7 @@ void HTTPClient::setTimeout(int interval)
     timer = new QTimer(this);
     timer->setSingleShot(true);
     timer->setInterval(interval);
-    connect(timer, SIGNAL(timeout()), this, SLOT(checkConnectionOntimer()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(checkConnectionOnTimer()));
 }
 
 void HTTPClient::setRequestAttempts(int count)
@@ -22,6 +22,7 @@ void HTTPClient::setRequestAttempts(int count)
 
 void HTTPClient::makeRequest(const QString& url, QHttpMultiPart* multiPart)
 {
+
     requestErrorCount = 0;
     requestProxy(url, multiPart);
 }
@@ -29,15 +30,17 @@ void HTTPClient::makeRequest(const QString& url, QHttpMultiPart* multiPart)
 void HTTPClient::requestProxy(const QString& url, QHttpMultiPart* multiPart)
 {
     qDebug() << "requestProxy " << url;
+    qDebug()<<" multiPart  "<< multiPart;
     this->url = url;
     requestInProgress = true;
     timer->start();
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
-    QNetworkReply* httpReply= networkManager->post(request, multiPart);
+    QNetworkReply* httpReply = networkManager->post(request, multiPart);
+    multiPart->setParent(httpReply);
 }
 
-void HTTPClient::onSslError(QNetworkReply* reply,const QList<QSslError>& errors)
+void HTTPClient::onSslError(QNetworkReply* reply, const QList<QSslError>& errors)
 {
     foreach (const QSslError &e, errors)
     {
@@ -70,7 +73,6 @@ void HTTPClient::httpRequestSuccessHandler(QNetworkReply* reply)
     {
         requestErrorCount = 0;
         requestSucces = true;
-        emit requestSuccessSignal(reply->readAll());
     }
 }
 
@@ -79,7 +81,8 @@ void HTTPClient::requestFailedPostAction()
     if(++requestErrorCount < MAX_REQUEST_COUNT)
     {
         qDebug()<<"request failed, try again "<<url;
-        //requestProxy(url);
+        //todo repeat
+       // requestProxy(url);
     }
     else
     {

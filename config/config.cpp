@@ -3,7 +3,7 @@
 #include <QJsonObject.h>
 #include <QJsonArray.h>
 
-Config::Config( )
+Config::Config()
 {
 
 }

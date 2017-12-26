@@ -43,8 +43,8 @@ HEADERS += \
     face++/face/FaceDetectionHTTPClient.h \
     face++/face/FaceDetectionParser.h \
     face++/face/FaceHolder.h \
-    face++/face/facetypes.h \
     datamanager/DataManager.h \
     face++/Controller.h \
     face++/face/FaceController.h \
-    face++/FacePlusPlusConfig.h
+    face++/FacePlusPlusConfig.h \
+    face++/face/FaceTypes.h

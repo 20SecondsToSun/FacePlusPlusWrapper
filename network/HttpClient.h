@@ -22,6 +22,7 @@ signals:
 protected slots:
     virtual void httpRequestSuccessHandler(QNetworkReply* reply);
     void onSslError(QNetworkReply* reply,const QList<QSslError> &errors);
+    void checkConnectionOntimer();
 
 public:
     explicit HTTPClient(QObject *parent = nullptr);
@@ -32,8 +33,7 @@ public:
     bool getRequestStatus() const;
 
 private:
-    void requestProxy(const QString& url, QHttpMultiPart *multiPart);
-    void checkConnectionOntimer();
+    void requestProxy(const QString& url, QHttpMultiPart *multiPart);    
     void requestFailedPostAction();
 
     QString url;
