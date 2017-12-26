@@ -20,12 +20,11 @@ void FaceDetectionParcer::parse(const QJsonObject& jsonObject)
 
             //face rectangle
             QJsonObject faceRectangleJson = faceJson["face_rectangle"].toObject();
-            FaceRectangle faceRect;
-            int shift = 10;
-            faceRect.top    = faceRectangleJson.value("top").toDouble() - shift;
-            faceRect.left   = faceRectangleJson.value("left").toDouble() - shift;
-            faceRect.width  = faceRectangleJson.value("width").toDouble() + shift;
-            faceRect.height = faceRectangleJson.value("height").toDouble() + shift;
+            FaceRectangle faceRect;           
+            faceRect.top    = faceRectangleJson.value("top").toDouble();
+            faceRect.left   = faceRectangleJson.value("left").toDouble();
+            faceRect.width  = faceRectangleJson.value("width").toDouble();
+            faceRect.height = faceRectangleJson.value("height").toDouble();
             face.setFaceRectangle(faceRect);
 
             // face attributes
