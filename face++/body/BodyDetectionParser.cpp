@@ -10,8 +10,6 @@ void BodyDetectionParser::parse(const QJsonObject& jsonObject)
 {
     QJsonArray bodiesJson = jsonObject["humanbodies"].toArray();
 
-    qDebug() << "bodiesJson::::::: " << bodiesJson;
-
     if(bodiesJson.size() != 0)
     {
         for(int i = 0; i < bodiesJson.size(); i++)

@@ -49,7 +49,7 @@ void HTTPClient::onSslError(QNetworkReply* reply, const QList<QSslError>& errors
     reply->ignoreSslErrors(errors);
 }
 
-void HTTPClient::checkConnectionOntimer()
+void HTTPClient::checkConnectionOnTimer()
 {
     if(requestInProgress && httpReply)
     {

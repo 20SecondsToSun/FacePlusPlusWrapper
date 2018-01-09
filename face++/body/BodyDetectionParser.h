@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QJsonObject>
 #include <QDebug>
-#include "face++/bodytypes.h"
+#include "face++/body/bodytypes.h"
 
 class BodyDetectionParser
 {

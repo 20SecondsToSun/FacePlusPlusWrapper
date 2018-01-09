@@ -4,6 +4,7 @@
 #include <QQmlContext>
 #include "config/Config.h"
 #include "face++/face/FaceController.h"
+#include "face++/body/BodyController.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,10 +19,10 @@ int main(int argc, char *argv[])
     QScopedPointer<Config> config(new Config);
     config->load();
 
-    QScopedPointer<Controller> facecontroller(new FaceController);
-    facecontroller->init();
+    QScopedPointer<Controller> controller(new BodyController);
+    controller->init();
 
-    engine.rootContext()->setContextProperty("facecontroller", facecontroller.data());
+    engine.rootContext()->setContextProperty("controller", controller.data());
 
     return app.exec();
 }

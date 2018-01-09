@@ -1,21 +1,21 @@
-#ifndef FACEDETECTIONREQUEST_H
-#define FACEDETECTIONREQUEST_H
+#ifndef BODYDETECTIONHTTPCLIENT_H
+#define BODYDETECTIONHTTPCLIENT_H
 
 #include <QString>
 #include <QByteArray>
 #include <QSettings>
-#include "FaceTypes.h"
+#include "BodyTypes.h"
 #include "network/HTTPClient.h"
 
-class FaceDetectionHTTPClient : public HTTPClient
+class BodyDetectionHTTPClient : public HTTPClient
 {
     Q_OBJECT
 
 public:
-    FaceDetectionHTTPClient();
+    BodyDetectionHTTPClient();
 
     void initService(const QString& settingsFile);
-    void sendPhoto(const QString& photoURL);
+    void sendPhoto(const QString& photoURL, BODY_REQUEST_TYPE type = BODY_REQUEST_TYPE::BODY_DETECT);
 
     void requestSuccessHandler(const QByteArray& data);
 
@@ -28,11 +28,13 @@ protected slots:
     void requestFailedHandler();
 
 private:
-    QString FACE_URL      ;// = "https://api-us.faceplusplus.com/facepp/v3/detect";
+    QString BODY_URL      ;// = "https://api-us.faceplusplus.com/facepp/v3/detect";
+    QString BODY_SEGMENT_URL;
+    QString BODY_GESTURE_URL;
     QString API_KEY       ;// = "MA2zIsaERn-g6x3ngsfAjTGZLPylVh8b";
     QString API_SECRET    ;// = "s9Gn2v8GOe6w5WMCh8ywYMJIcVRUlxlh";
     int FACE_SERVER_TIMEOUT = 0;
-    QString RETURN_ATTRIBUTES = "headpose,gender,eyegaze,beauty";
+    QString RETURN_ATTRIBUTES = "gender,cloth_color";
 };
 
 #endif // FACEDETECTIONREQUEST_H

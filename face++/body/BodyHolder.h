@@ -2,7 +2,7 @@
 #define BODYHOLDER_H
 
 #include <QObject>
-#include "face++/BodyTypes.h"
+#include "face++/body/BodyTypes.h"
 
 
 class BodyHolder : public QObject

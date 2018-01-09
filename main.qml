@@ -23,10 +23,9 @@ ApplicationWindow {
         text:"photo load"
         onClicked:
         {
-            fileDialog.visible = true
+           fileDialog.open();
         }
     }
-
 
     Button
     {
@@ -35,11 +34,9 @@ ApplicationWindow {
         text:"run"
         onClicked:
         {
-            facecontroller.run(photoUrl);
+            controller.run(photoUrl);
         }
     }
-
-
 
     FileDialog {
         id: fileDialog

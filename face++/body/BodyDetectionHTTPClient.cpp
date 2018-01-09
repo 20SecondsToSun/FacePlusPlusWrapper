@@ -1,4 +1,4 @@
-#include "FaceDetectionHTTPClient.h"
+#include "BodyDetectionHTTPClient.h"
 
 #include <QFile>
 #include <QHttpMultiPart>
@@ -6,18 +6,26 @@
 #include <QJsonObject>
 #include <QIODevice>
 
-FaceDetectionHTTPClient::FaceDetectionHTTPClient()
+BodyDetectionHTTPClient::BodyDetectionHTTPClient()
 {
     connect(this, SIGNAL(requestFailSignal()), this, SLOT(requestFailedHandler()));
 }
 
-void FaceDetectionHTTPClient::initService(const QString& settingsFile)
+void BodyDetectionHTTPClient::initService(const QString& settingsFile)
 {
     QSettings settings(settingsFile, QSettings::IniFormat);
     settings.beginGroup("Server");
-    FACE_URL = settings.value("FACE_PROTOCOL").toString()
-            + "://" + settings.value("FACE_HOST").toString()
-            + "/" + settings.value("FACE_METHOD").toString();
+    BODY_URL = settings.value("BODY_PROTOCOL").toString()
+            + "://" + settings.value("BODY_HOST").toString()
+            + "/" + settings.value("BODY_METHOD").toString();
+
+    BODY_SEGMENT_URL = settings.value("BODY_PROTOCOL").toString()
+            + "://" + settings.value("BODY_HOST").toString()
+            + "/" + settings.value("BODY_SEGMENT_METHOD").toString();
+
+    BODY_GESTURE_URL = settings.value("BODY_PROTOCOL").toString()
+            + "://" + settings.value("BODY_HOST").toString()
+            + "/" + settings.value("BODY_GESTURE_METHOD").toString();
 
     API_KEY = settings.value("API_KEY").toString();
     API_SECRET = settings.value("API_SECRET").toString();
@@ -28,12 +36,11 @@ void FaceDetectionHTTPClient::initService(const QString& settingsFile)
     HTTPClient::setRequestAttempts(2);
 }
 
-void FaceDetectionHTTPClient::sendPhoto(const QString& photoURL)
+void BodyDetectionHTTPClient::sendPhoto(const QString& photoURL, BODY_REQUEST_TYPE type)
 {
     QString cleanUrl = photoURL;
     QString prefix = "file:///";
     cleanUrl = cleanUrl.remove(0, prefix.size());
-    qDebug()<<"cleanUrl "<<cleanUrl;
 
     QFile* file = new QFile(cleanUrl);
     file->open(QIODevice::ReadOnly);
@@ -61,19 +68,30 @@ void FaceDetectionHTTPClient::sendPhoto(const QString& photoURL)
     loginPart.setBody(API_SECRET.toUtf8());
     multiPart->append(loginPart);
 
-    QHttpPart attrPart;
-    attrPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"return_landmark\""));
-    attrPart.setBody("1");
-    multiPart->append(attrPart);
+    switch(type)
+    {
+        case BODY_REQUEST_TYPE::BODY_DETECT:
+        {
+            QHttpPart attrPart;
+            attrPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"return_attributes\""));
+            attrPart.setBody(RETURN_ATTRIBUTES.toUtf8());
+            multiPart->append(attrPart);
+            makeRequest(BODY_URL, multiPart);
+        }
+        break;
 
-    attrPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"return_attributes\""));
-    attrPart.setBody(RETURN_ATTRIBUTES.toUtf8());
-    multiPart->append(attrPart);
+        case BODY_REQUEST_TYPE::SEGMENT:
+            makeRequest(BODY_SEGMENT_URL, multiPart);
+        break;
 
-    makeRequest(FACE_URL, multiPart);
+        case BODY_REQUEST_TYPE::GESTURE:
+            makeRequest(BODY_GESTURE_URL, multiPart);
+        break;
+    }
+
 }
 
-void FaceDetectionHTTPClient::httpRequestSuccessHandler(QNetworkReply* reply)
+void BodyDetectionHTTPClient::httpRequestSuccessHandler(QNetworkReply* reply)
 {
     HTTPClient::httpRequestSuccessHandler(reply);
 
@@ -83,7 +101,7 @@ void FaceDetectionHTTPClient::httpRequestSuccessHandler(QNetworkReply* reply)
     emit requestSuccessSignal(jsonObject);
 }
 
-void FaceDetectionHTTPClient::requestFailedHandler()
+void BodyDetectionHTTPClient::requestFailedHandler()
 {
     emit serviceErrorSignal();
 }

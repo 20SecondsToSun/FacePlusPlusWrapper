@@ -22,7 +22,7 @@ signals:
 protected slots:
     virtual void httpRequestSuccessHandler(QNetworkReply* reply);
     void onSslError(QNetworkReply* reply,const QList<QSslError> &errors);
-    void checkConnectionOntimer();
+    void checkConnectionOnTimer();
 
 public:
     explicit HTTPClient(QObject *parent = nullptr);
