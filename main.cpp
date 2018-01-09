@@ -5,6 +5,7 @@
 #include "config/Config.h"
 #include "face++/face/FaceController.h"
 #include "face++/body/BodyController.h"
+#include "face++/image/FaceMergeController.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,7 +20,7 @@ int main(int argc, char *argv[])
     QScopedPointer<Config> config(new Config);
     config->load();
 
-    QScopedPointer<Controller> controller(new BodyController);
+    QScopedPointer<Controller> controller(new FaceMergeController);
     controller->init();
 
     engine.rootContext()->setContextProperty("controller", controller.data());

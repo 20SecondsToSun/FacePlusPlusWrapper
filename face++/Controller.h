@@ -9,7 +9,9 @@ class Controller : public QObject
 public:
     explicit Controller(QObject *parent = nullptr);
 
-    virtual void run(const QString&) = 0;
+    virtual void run(const QString&){};
+    virtual void run(const QString& path1, const QString& path2){};
+
     virtual void init() = 0;
     virtual ~Controller(){};
 

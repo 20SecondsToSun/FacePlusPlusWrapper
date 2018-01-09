@@ -9,7 +9,9 @@ ApplicationWindow {
     height: 700
     title: qsTr("Face++")
 
-    property string photoUrl;
+    property string photoUrl1;
+    property string photoUrl2;
+    property int buttonId: 1;
 
     Image
     {
@@ -23,6 +25,7 @@ ApplicationWindow {
         text:"photo load"
         onClicked:
         {
+           buttonId = 1;
            fileDialog.open();
         }
     }
@@ -31,10 +34,22 @@ ApplicationWindow {
     {
         implicitWidth:200
         y:50;
+        text:"photo load 2"
+        onClicked:
+        {
+           buttonId = 2;
+           fileDialog.open();
+        }
+    }
+
+    Button
+    {
+        implicitWidth:200
+        y:100;
         text:"run"
         onClicked:
         {
-            controller.run(photoUrl);
+            controller.run(photoUrl1, photoUrl2);
         }
     }
 
@@ -44,8 +59,16 @@ ApplicationWindow {
         folder: shortcuts.desktop
         nameFilters: [ "Image files (*.jpg *.png)", "All files (*)" ]
         onAccepted: {
-            photo.source = photoUrl = fileDialog.fileUrls[0];
+            photo.source = fileDialog.fileUrls[0];
 
+            if (buttonId == 1)
+            {
+                photoUrl1 = photo.source;
+            }
+            else
+            {
+                 photoUrl2 = photo.source;
+            }
         }
         onRejected: {
             console.log("Canceled")
