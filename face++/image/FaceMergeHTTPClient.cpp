@@ -30,7 +30,6 @@ void FaceMergeHTTPClient::initService(const QString& settingsFile)
 
 void FaceMergeHTTPClient::sendPhoto(const QString& photoURL1, const QString& photoURL2)
 {
-
     QFile* file1 = getPhotoFile(photoURL1);
     QFile* file2 = getPhotoFile(photoURL2);
 

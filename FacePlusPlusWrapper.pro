@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     face++/image/FaceMergeController.cpp \
     face++/image/FaceMergeParser.cpp \
     face++/image/FaceMergeHTTPClient.cpp \
-    face++/FacePlusPlusHTTP.cpp
+    face++/FacePlusPlusHTTP.cpp \
+    face++/face/FaceCompareParcer.cpp
 
 RESOURCES += qml.qrc
 
@@ -68,4 +69,5 @@ HEADERS += \
     face++/image/FaceMergeController.h \
     face++/image/FaceMergeParser.h \
     face++/image/FaceMergeHTTPClient.h \
-    face++/FacePlusPlusHTTP.h
+    face++/FacePlusPlusHTTP.h \
+    face++/face/FaceCompareParcer.h

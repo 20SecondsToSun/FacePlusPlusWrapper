@@ -20,22 +20,38 @@ void FaceController::init()
 
 void FaceController::run(const QString& path)
 {
-    faceDetectionHTTPClient->sendPhoto(path);
+    apiMethod = FACE_API_METHOD::DETECT;
+    faceDetectionHTTPClient->faceDetect(path);
+}
+
+void FaceController::run(const QString& path1, const QString& path2)
+{
+    apiMethod = FACE_API_METHOD::COMPARE;
+    faceDetectionHTTPClient->faceCompare(path1, path2);
 }
 
 void FaceController::requestSuccessHandler(const QJsonObject& jsonObject)
 {
-    FaceDetectionParcer parser;
-    parser.parse(jsonObject);
+    if(apiMethod == FACE_API_METHOD::DETECT)
+    {
+        FaceDetectionParcer parser;
+        parser.parse(jsonObject);
 
-    if(parser.noFaces())
-    {
-        qDebug()<<"no faces";
+        if(parser.noFaces())
+        {
+            qDebug()<<"no faces";
+        }
+        else
+        {
+            qDebug()<<"find faces count: "<< parser.getFaces().size();
+        }
     }
-    else
+    else if(apiMethod == FACE_API_METHOD::COMPARE)
     {
-        qDebug()<<"find faces count: "<< parser.getFaces().size();
+        FaceCompareParcer parser;
+        parser.parse(jsonObject);
     }
+
 }
 
 void FaceController::httpErrorHandler()

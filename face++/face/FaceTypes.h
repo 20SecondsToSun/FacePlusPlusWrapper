@@ -9,6 +9,12 @@
 #include <QPoint>
 #include <QSharedPointer>
 
+enum class FACE_API_METHOD
+{
+    DETECT,
+    COMPARE
+};
+
 struct FaceRectangle
 {
     FaceRectangle(float t, float l, float w, float h):

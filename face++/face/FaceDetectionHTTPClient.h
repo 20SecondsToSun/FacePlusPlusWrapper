@@ -15,10 +15,12 @@ class FaceDetectionHTTPClient : public FacePlusPlusHTTP
 public:
     FaceDetectionHTTPClient();
     void initService(const QString& settingsFile);
-    void sendPhoto(const QString& photoURL);
+    void faceDetect(const QString& photoURL);
+    void faceCompare(const QString& photoURL1, const QString& photoURL2);
 
 private:
     QString FACE_URL;
+    QString FACE_COMPARE_URL;
     QString RETURN_ATTRIBUTES = "headpose,gender,eyegaze,beauty";
 };
 
