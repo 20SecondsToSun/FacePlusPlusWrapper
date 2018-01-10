@@ -30,6 +30,7 @@ void FaceMergeHTTPClient::initService(const QString& settingsFile)
 
 void FaceMergeHTTPClient::sendPhoto(const QString& photoURL1, const QString& photoURL2)
 {
+
     QFile* file1 = getPhotoFile(photoURL1);
     QFile* file2 = getPhotoFile(photoURL2);
 
@@ -39,8 +40,10 @@ void FaceMergeHTTPClient::sendPhoto(const QString& photoURL1, const QString& pho
         return;
     }
 
-    QHttpMultiPart* multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+    qDebug()<<"photoURL1 "<<photoURL1;
+    qDebug()<<"photoURL2 "<<photoURL2;
 
+    QHttpMultiPart* multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
 
     QHttpPart imageTemplatePart;
     imageTemplatePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/jpeg"));
@@ -51,51 +54,19 @@ void FaceMergeHTTPClient::sendPhoto(const QString& photoURL1, const QString& pho
 
     QHttpPart imageMergePart;
     imageMergePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/jpeg"));
-    imageMergePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"merge_file\"; filename=\"face1.jpeg\""));
+    imageMergePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"merge_file\"; filename=\"face2.jpeg\""));
     imageMergePart.setBodyDevice(file2);
-    file1->setParent(multiPart);
+    file2->setParent(multiPart);
     multiPart->append(imageMergePart);
-
 
     QHttpPart rectanglePart;
     rectanglePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"template_rectangle\""));
-    rectanglePart.setBody("0,200,400,500");
+    rectanglePart.setBody("0,0,460,468");
     multiPart->append(rectanglePart);
 
-    QHttpPart loginPart;
-    loginPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"api_key\""));
-    loginPart.setBody(API_KEY.toUtf8());
-    multiPart->append(loginPart);
+    addLoginPart(multiPart);
 
-    loginPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"api_secret\""));
-    loginPart.setBody(API_SECRET.toUtf8());
-    multiPart->append(loginPart);
-
+    makeRequest(FACE_MERGE_URL, multiPart);
 }
 
-QFile* FaceMergeHTTPClient::getPhotoFile(const QString& photoURL)
-{
-    QString cleanUrl = photoURL;
-    QString prefix = "file:///";
-    cleanUrl = cleanUrl.remove(0, prefix.size());
-
-    QFile* file = new QFile(cleanUrl);
-    file->open(QIODevice::ReadOnly);
-    return file;
-}
-
-void FaceMergeHTTPClient::httpRequestSuccessHandler(QNetworkReply* reply)
-{
-    HTTPClient::httpRequestSuccessHandler(reply);
-
-    auto data  = reply->readAll();
-    QJsonDocument jsonResponse = QJsonDocument::fromJson(data);
-    QJsonObject jsonObject = jsonResponse.object();
-    emit requestSuccessSignal(jsonObject);
-}
-
-void FaceMergeHTTPClient::requestFailedHandler()
-{
-    emit serviceErrorSignal();
-}
 

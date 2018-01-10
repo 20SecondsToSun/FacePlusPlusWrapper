@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     QScopedPointer<Config> config(new Config);
     config->load();
 
-    QScopedPointer<Controller> controller(new FaceMergeController);
+    QScopedPointer<Controller> controller(new FaceController);
     controller->init();
 
     engine.rootContext()->setContextProperty("controller", controller.data());

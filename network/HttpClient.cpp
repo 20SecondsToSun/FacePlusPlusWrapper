@@ -53,7 +53,7 @@ void HTTPClient::checkConnectionOnTimer()
 {
     if(requestInProgress && httpReply)
     {
-        httpReply->abort();
+       // httpReply->abort();
     }
 }
 

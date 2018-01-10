@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     face++/body/BodyGestureDetectionParser.cpp \
     face++/image/FaceMergeController.cpp \
     face++/image/FaceMergeParser.cpp \
-    face++/image/FaceMergeHTTPClient.cpp
+    face++/image/FaceMergeHTTPClient.cpp \
+    face++/FacePlusPlusHTTP.cpp
 
 RESOURCES += qml.qrc
 
@@ -66,4 +67,5 @@ HEADERS += \
     face++/body/BodyGestureDetectionParser.h \
     face++/image/FaceMergeController.h \
     face++/image/FaceMergeParser.h \
-    face++/image/FaceMergeHTTPClient.h
+    face++/image/FaceMergeHTTPClient.h \
+    face++/FacePlusPlusHTTP.h

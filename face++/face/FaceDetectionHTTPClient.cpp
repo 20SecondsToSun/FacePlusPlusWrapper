@@ -30,13 +30,7 @@ void FaceDetectionHTTPClient::initService(const QString& settingsFile)
 
 void FaceDetectionHTTPClient::sendPhoto(const QString& photoURL)
 {
-    QString cleanUrl = photoURL;
-    QString prefix = "file:///";
-    cleanUrl = cleanUrl.remove(0, prefix.size());
-    qDebug()<<"cleanUrl "<<cleanUrl;
-
-    QFile* file = new QFile(cleanUrl);
-    file->open(QIODevice::ReadOnly);
+    QFile* file = getPhotoFile(photoURL);
 
     if(!file->isOpen())
     {
@@ -52,14 +46,7 @@ void FaceDetectionHTTPClient::sendPhoto(const QString& photoURL)
     file->setParent(multiPart);
     multiPart->append(imagePart);
 
-    QHttpPart loginPart;
-    loginPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"api_key\""));
-    loginPart.setBody(API_KEY.toUtf8());
-    multiPart->append(loginPart);
-
-    loginPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"api_secret\""));
-    loginPart.setBody(API_SECRET.toUtf8());
-    multiPart->append(loginPart);
+    addLoginPart(multiPart);
 
     QHttpPart attrPart;
     attrPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"return_landmark\""));
@@ -71,19 +58,4 @@ void FaceDetectionHTTPClient::sendPhoto(const QString& photoURL)
     multiPart->append(attrPart);
 
     makeRequest(FACE_URL, multiPart);
-}
-
-void FaceDetectionHTTPClient::httpRequestSuccessHandler(QNetworkReply* reply)
-{
-    HTTPClient::httpRequestSuccessHandler(reply);
-
-    auto data  = reply->readAll();
-    QJsonDocument jsonResponse = QJsonDocument::fromJson(data);
-    QJsonObject jsonObject = jsonResponse.object();
-    emit requestSuccessSignal(jsonObject);
-}
-
-void FaceDetectionHTTPClient::requestFailedHandler()
-{
-    emit serviceErrorSignal();
 }

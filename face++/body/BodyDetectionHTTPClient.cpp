@@ -38,12 +38,7 @@ void BodyDetectionHTTPClient::initService(const QString& settingsFile)
 
 void BodyDetectionHTTPClient::sendPhoto(const QString& photoURL, BODY_REQUEST_TYPE type)
 {
-    QString cleanUrl = photoURL;
-    QString prefix = "file:///";
-    cleanUrl = cleanUrl.remove(0, prefix.size());
-
-    QFile* file = new QFile(cleanUrl);
-    file->open(QIODevice::ReadOnly);
+    QFile* file = getPhotoFile(photoURL);
 
     if(!file->isOpen())
     {
@@ -59,14 +54,7 @@ void BodyDetectionHTTPClient::sendPhoto(const QString& photoURL, BODY_REQUEST_TY
     file->setParent(multiPart);
     multiPart->append(imagePart);
 
-    QHttpPart loginPart;
-    loginPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"api_key\""));
-    loginPart.setBody(API_KEY.toUtf8());
-    multiPart->append(loginPart);
-
-    loginPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"api_secret\""));
-    loginPart.setBody(API_SECRET.toUtf8());
-    multiPart->append(loginPart);
+    addLoginPart(multiPart);
 
     switch(type)
     {
@@ -89,19 +77,4 @@ void BodyDetectionHTTPClient::sendPhoto(const QString& photoURL, BODY_REQUEST_TY
         break;
     }
 
-}
-
-void BodyDetectionHTTPClient::httpRequestSuccessHandler(QNetworkReply* reply)
-{
-    HTTPClient::httpRequestSuccessHandler(reply);
-
-    auto data  = reply->readAll();
-    QJsonDocument jsonResponse = QJsonDocument::fromJson(data);
-    QJsonObject jsonObject = jsonResponse.object();
-    emit requestSuccessSignal(jsonObject);
-}
-
-void BodyDetectionHTTPClient::requestFailedHandler()
-{
-    emit serviceErrorSignal();
 }
