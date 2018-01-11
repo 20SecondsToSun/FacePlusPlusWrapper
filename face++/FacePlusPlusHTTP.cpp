@@ -24,7 +24,35 @@ void FacePlusPlusHTTP::httpRequestSuccessHandler(QNetworkReply* reply)
     auto data  = reply->readAll();
     QJsonDocument jsonResponse = QJsonDocument::fromJson(data);
     QJsonObject jsonObject = jsonResponse.object();
-    emit requestSuccessSignal(jsonObject);
+
+    bool noError = parsResponseCommonPart(jsonObject);
+
+    if(noError)
+    {
+        emit requestSuccessSignal(jsonObject);
+    }
+    else
+    {
+        emit serviceErrorSignal();
+    }
+}
+
+bool FacePlusPlusHTTP::parsResponseCommonPart(const QJsonObject& jsonObject)
+{
+    responseCommonPart.requestId = jsonObject["request_id"].toString();
+    responseCommonPart.timeUsed = jsonObject["time_used"].toInt();
+    responseCommonPart.errorMessage = jsonObject["error_message"].toString();
+    return responseCommonPart.errorMessage == "";
+}
+
+ResponseCommonPart FacePlusPlusHTTP::getResponseCommonPart() const
+{
+    return responseCommonPart;
+}
+
+QString FacePlusPlusHTTP::getLastError() const
+{
+    return responseCommonPart.errorMessage;
 }
 
 void FacePlusPlusHTTP::requestFailedHandler()

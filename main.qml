@@ -49,7 +49,7 @@ ApplicationWindow {
         text:"run"
         onClicked:
         {
-            controller.run(photoUrl1, photoUrl2);
+            controller.run(photoUrl1);//, photoUrl2);
         }
     }
 
